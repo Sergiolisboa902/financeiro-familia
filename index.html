@@ -282,6 +282,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 // Inicializa o cliente do Supabase
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ── STATE ─────────────────────────────────────────────
+let members = [], txs = [], goals = [];
+
 // ── SETUP ─────────────────────────────────────────────
 function initSetup(){
   document.getElementById('setupColors').innerHTML=MCOLS.map((c,i)=>`<div class="cdot ${i===0?'sel':''}" style="background:${c}" onclick="pickSetupColor('${c}',this)"></div>`).join('');
