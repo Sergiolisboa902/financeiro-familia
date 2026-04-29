@@ -1,34 +1,29 @@
-﻿---
-tags:
-  - projeto/infra
-  - devops
-  - setup
 ---
-# ⚙️ Infraestrutura e Integrações
-
-Este documento rastreia o estado das conexões externas do projeto.
-
-## 🔗 Serviços Vinculados
-- [ ] **GitHub:** [Link do Repositório]
-- [ ] **Vercel:** [Link do Deploy]
-- [ ] **Supabase:** [URL do Projeto]
-- [ ] **Outros:** [Ex: Stripe, Resend]
-
-## 🔑 Checklist de Variáveis de Ambiente (.env)
-*Marque o que já foi configurado localmente:*
-- [ ] NEXT_PUBLIC_SUPABASE_URL
-- [ ] SUPABASE_SERVICE_ROLE_KEY
-- [ ] VERCEL_TOKEN
-- [ ] GITHUB_ACCESS_TOKEN
-
-## 🛠️ Permissões e Acessos
-> [!WARNING]
-> Nunca armazene as chaves/secrets reais neste arquivo. Use o gerenciador de segredos ou um arquivo .env ignorado pelo Git.
-
-- **Acesso ao Banco:** [Ex: Apenas IP local e Vercel]
-- **Nível de Permissão Git:** [Ex: Admin / Escrita]
-
+tags: [projeto/infra]
 ---
-**Conexões:**
-- [[01-ARCHITECTURE|Ver Stack Técnica]]
-- [[04-JOURNAL|Registrar alteração de Infra no Log]]
+
+# 🛠️ Infraestrutura e Configuração
+
+## 🌐 Ambiente de Hospedagem
+- **Frontend:** Pode ser hospedado em qualquer provedor de estáticos (Vercel, Netlify, GitHub Pages).
+- **Backend/Banco de Dados:** [Supabase](https://supabase.com/).
+
+## 🗄️ Banco de Dados (Supabase/PostgreSQL)
+O esquema está definido no arquivo `supabase-schema.sql`.
+
+### Tabelas Principais:
+- **`membros`**: `id`, `nome`, `cor`.
+- **`transacoes`**: `id`, `tipo`, `valor`, `descricao`, `data`, `categoria`, `membro_id`, `recorrencia`, `status`, `data_vencimento`.
+- **`metas`**: `id`, `nome`, `valor_alvo`, `valor_atual`, `prazo`, `cor`.
+
+## ⚙️ Configuração Local
+Para rodar o projeto localmente:
+1. Abra o arquivo `index.html` diretamente no navegador (ou via Live Server).
+2. As credenciais do Supabase estão em `supabase-config.js`.
+
+> ⚠️ **Atenção:** Atualmente as chaves do Supabase estão expostas no código (Client Side). Para produção, recomenda-se configurar políticas de RLS restritivas.
+
+## 📦 Dependências Externas (CDNs)
+- Supabase SDK: `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2`
+- XLSX: `https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js`
+- Google Fonts: `DM Sans` e `DM Serif Display`.
