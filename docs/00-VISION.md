@@ -5,7 +5,7 @@ tags: [projeto/visao]
 # 🎯 Visão do Projeto
 
 ## 📝 Descrição
-O **Família $ (Finanças do Lar)** é uma aplicação web leve e intuitiva projetada para centralizar o controle financeiro de uma família. Diferente de apps de finanças pessoais tradicionais, ele foca na colaboração entre membros da casa e na visualização clara do impacto individual e coletivo no orçamento mensal.
+O **Planeja+** é uma aplicação web leve e intuitiva projetada para centralizar o controle financeiro de uma família. Diferente de apps de finanças pessoais tradicionais, ele foca na colaboração entre membros da casa e na visualização clara do impacto individual e coletivo no orçamento mensal.
 
 ## 🚀 Objetivos
 - **Transparência:** Permitir que todos os membros da família saibam para onde o dinheiro está indo.

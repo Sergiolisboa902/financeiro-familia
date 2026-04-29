@@ -19,6 +19,7 @@ O projeto é um protótipo funcional e integrado a um backend real (Supabase). T
 - Consolidação das informações de infraestrutura do Supabase.
 - Mapeamento das regras de cálculo de saldo e recorrência.
 - **Preparação para Deploy:** Renomeado `familia-financas.html` para `index.html` e atualizadas todas as referências internas para garantir compatibilidade com o Vercel.
+- **Branding:** Renomeado o sistema de "Família $" para "Planeja+".
 
 #### Próximos Passos:
 1. Revisar as funções de cálculo no frontend para garantir precisão matemática.

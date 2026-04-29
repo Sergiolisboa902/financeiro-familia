@@ -141,7 +141,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <!-- SETUP -->
 <div class="setup" id="setup">
   <div style="font-size:48px;margin-bottom:6px">💰</div>
-  <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);margin-bottom:6px">Família $</div>
+  <div style="font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);margin-bottom:6px">Planeja+</div>
   <p style="font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.6">Quem vai usar o app?<br/>Adicione os membros da família.</p>
   <div id="setupList" style="width:100%;margin-bottom:12px"></div>
   <div style="display:flex;gap:8px;width:100%;margin-bottom:10px">
@@ -739,7 +739,7 @@ function openGoalModal(id){
   document.getElementById('gTarget').value=g?.target||'';
   document.getElementById('gCurrent').value=g?.current||'';
   document.getElementById('gDeadline').value=g?.deadline||'';
-  document.getElementById('gEmoji').innerHTML=GEMOJIS.map(e=>`<button class="emoji-btn ${e===gEmoji?'sel':''}" onclick="pickGEmoji('${e}',this)">${e}</button>`).join('');
+  document.getElementById('gEmoji').innebutton class="emoji-btn ${e===gEmoji?'sel':''}" onclick="pickGEmoji('${e}',this)">${e}</button>`).join('');
   document.getElementById('gColor').innerHTML=GCOLS.map(col=>`<div class="cdot ${col===gColor?'sel':''}" style="background:${col}" onclick="pickGColor('${col}',this)"></div>`).join('');
   openOverlay('goalModal');
 }
@@ -847,5 +847,8 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   } else {initSetup();}
 });
 </script>
+</body>
+</html>
+pt>
 </body>
 </html>
