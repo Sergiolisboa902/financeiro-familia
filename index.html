@@ -1579,6 +1579,7 @@
       openOverlay('editModal');
     }
     function eSetType(t) {
+      const descValue = document.getElementById('eDesc').value;
       editType = t;
       document.getElementById('eBtnExp').className = 'type-btn' + (t === 'expense' ? ' ae' : '');
       document.getElementById('eBtnInc').className = 'type-btn' + (t === 'income' ? ' ai' : '');
@@ -1586,10 +1587,12 @@
       document.getElementById('eStatusWrap').style.display = t === 'expense' ? 'block' : 'none';
       const cats = t === 'expense' ? EXP_CATS : INC_CATS;
       document.getElementById('eCat').innerHTML = cats.map(c => `<option>${c.l}</option>`).join('');
+      document.getElementById('eDesc').value = descValue;
     }
     function pickEditEmoji(e, btn) { editEmoji = e; document.querySelectorAll('#eEmoji .emoji-btn').forEach(x => x.classList.remove('sel')); btn.classList.add('sel'); }
     async function saveEdit() {
-      const i = txs.findIndex(t => t.id === editId); if (i < 0) return;
+      if (!editId) return;
+      const i = txs.findIndex(t => String(t.id) === String(editId)); if (i < 0) return;
       const type = editType;
       const updatedTx = {
         tipo: type,
@@ -1611,11 +1614,12 @@
       closeOverlay('editModal'); showToast('Atualizado ✓'); switchTab(currentTab);
     }
     async function deleteTx() {
+      if (!editId) return;
       const { error } = await sb.from('transacoes').delete().eq('id', editId);
       if (error) { showToast('Erro ao excluir'); console.error(error); return; }
-      txs = txs.filter(t => t.id !== editId); 
-      closeOverlay('editModal'); 
-      showToast('Excluído'); 
+      txs = txs.filter(t => String(t.id) !== String(editId));
+      closeOverlay('editModal');
+      showToast('Excluído');
       switchTab(currentTab);
     }
 
