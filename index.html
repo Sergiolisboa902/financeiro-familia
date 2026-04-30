@@ -1225,8 +1225,7 @@
     // ── STATE ─────────────────────────────────────────────
     let currentTab = 'home', currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
     let setupColor = MCOLS[0];
-    let addType = 'expense', addRaw = '', addCategory = 'Alimentação', addEmoji = '🛒', addMemberId = null, addRecur = 'once', addIsPaid = true, addDueDate = '';
-    let editId = null, editType = 'expense', editEmoji = '💸', editMember = null;
+    let addType = 'expense', addRaw = '', addCategory = 'Alimentação', addEmoji = '🛒', addMemberId = null, addRecur = 'once', addInstallments = 1, addIsPaid = true, addDueDate = '';
     let gId = null, gEmoji = '🎯', gColor = GCOLS[0];
     let contribGoalId = null, contribMember = null;
 
@@ -1443,13 +1442,15 @@
       const todayVal = today();
       const disp = addRaw ? fmtRaw(addRaw) : '<span style="opacity:.3">R$ 0,00</span>';
 
-      const recOpts = [{ v: 'once', l: 'Único', e: '1️⃣' }, { v: 'monthly', l: 'Mensal', e: '📅' }, { v: 'weekly', l: 'Semanal', e: '🔁' }, { v: 'yearly', l: 'Anual', e: '📆' }];
+      const recOpts = [{ v: 'once', l: 'Único', e: '1️⃣' }, { v: 'monthly', l: 'Mensal', e: '📅' }, { v: 'weekly', l: 'Semanal', e: '🔁' }, { v: 'yearly', l: 'Anual', e: '📆' }, { v: 'custom', l: 'Parcelas', e: '🔢' }];
 
       const mChips = members.map(m => `<button onclick="setAddMember('${m.id}')" class="chip" style="border-color:${m.id === addMemberId ? m.color : 'rgba(255,255,255,.1)'};background:${m.id === addMemberId ? m.color + '22' : 'transparent'};color:${m.id === addMemberId ? m.color : 'var(--text2)'}"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${m.color};margin-right:4px;vertical-align:middle"></span>${m.name}</button>`).join('');
 
       const catBtns = cats.map(cat => `<button onclick="setAddCat('${cat.l}','${cat.e}')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 4px;border-radius:11px;border:2px solid ${cat.l === addCategory ? 'var(--accent)' : 'rgba(255,255,255,.07)'};background:${cat.l === addCategory ? 'rgba(232,201,109,.1)' : 'var(--bg3)'};cursor:pointer;font-family:'DM Sans',sans-serif;flex:1;min-width:calc(25% - 6px)"><span style="font-size:19px">${cat.e}</span><span style="font-size:9px;color:${cat.l === addCategory ? 'var(--accent)' : 'var(--text3)'};font-weight:600;text-align:center;line-height:1.2">${cat.l}</span></button>`).join('');
 
       const recBtns = recOpts.map(r => `<button onclick="setAddRec('${r.v}')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 3px;border-radius:10px;border:2px solid ${addRecur === r.v ? 'var(--accent)' : 'rgba(255,255,255,.07)'};background:${addRecur === r.v ? 'rgba(232,201,109,.1)' : 'var(--bg3)'};cursor:pointer;font-family:'DM Sans',sans-serif"><span style="font-size:16px">${r.e}</span><span style="font-size:9px;color:${addRecur === r.v ? 'var(--accent)' : 'var(--text3)'};font-weight:700">${r.l}</span></button>`).join('');
+
+      const installmentsInput = addRecur === 'custom' ? `<div style="margin-bottom:13px"><div class="flabel">Nº DE PARCELAS</div><input type="number" class="finput" id="addInstallmentsInp" value="${addInstallments}" min="1" onchange="addInstallments=parseInt(this.value)||1"/></div>` : '';
 
       const paidToggle = addType === 'expense' ? `
     <div style="margin-bottom:13px">
@@ -1481,6 +1482,7 @@
     <div style="margin-bottom:13px"><div class="flabel">DATA DO LANÇAMENTO</div><input type="date" id="addDate" class="finput" value="${todayVal}"/></div>
     ${paidToggle}
     <div style="margin-bottom:13px"><div class="flabel">RECORRÊNCIA</div><div style="display:flex;gap:6px">${recBtns}</div></div>
+    ${installmentsInput}
     <div style="margin-bottom:13px"><div class="flabel">CATEGORIA</div><div style="display:flex;flex-wrap:wrap;gap:6px">${catBtns}</div></div>
     ${members.length > 1 ? `<div style="margin-bottom:14px"><div class="flabel">QUEM PAGOU</div><div class="chip-row">${mChips}</div></div>` : ''}
     <button onclick="saveAdd()" style="width:100%;padding:15px;background:${btnBg};border:none;border-radius:13px;color:${addType === 'expense' && !addIsPaid ? 'var(--bg)' : '#fff'};font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.3)">${btnLbl}</button>
@@ -1497,7 +1499,7 @@
     function setAddType(t) { addType = t; addCategory = (t === 'expense' ? EXP_CATS : INC_CATS)[0].l; addEmoji = (t === 'expense' ? EXP_CATS : INC_CATS)[0].e; if (t === 'income') addIsPaid = true; switchTab('add'); }
     function setAddCat(l, e) { addCategory = l; addEmoji = e; switchTab('add'); }
     function setAddMember(id) { addMemberId = id; switchTab('add'); }
-    function setAddRec(r) { addRecur = r; switchTab('add'); }
+    function setAddRec(r) { addRecur = r; if (r !== 'custom') addInstallments = 1; switchTab('add'); }
     function setAddPaid(v) { addIsPaid = v; if (v) addDueDate = ''; else if (!addDueDate) addDueDate = today(); switchTab('add'); }
 
     async function saveAdd() {
@@ -1517,6 +1519,7 @@
         icone: addEmoji,
         membro_id: addMemberId || (members[0]?.id || null),
         recorrencia: addRecur,
+        parcelas: addInstallments,
         status: addType === 'income' ? 'paid' : addIsPaid ? 'paid' : 'pending',
         data_vencimento: due || null
       };
@@ -1534,6 +1537,7 @@
         icon: data[0].icone,
         memberId: data[0].membro_id,
         recurrence: data[0].recorrencia,
+        installments: data[0].parcelas,
         dueDate: data[0].data_vencimento
       });
       addRaw = '';
