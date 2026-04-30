@@ -1747,14 +1747,6 @@
     // ── BOOT ──────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', async () => {
       await fetchData();
-      const setupEl = document.getElementById('setup');
-      if (setupEl) setupEl.style.display = 'none';
-      const ma = document.getElementById('mainApp'); 
-      if (ma) {
-        ma.style.display = 'flex'; 
-        ma.style.flexDirection = 'column'; 
-        ma.style.height = '100%';
-      }
       initApp();
     });
   </script>
