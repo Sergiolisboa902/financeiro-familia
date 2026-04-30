@@ -1170,7 +1170,8 @@
     function startApp() {
       if (!members.length) { showToast('Adicione pelo menos 1 membro'); return; }
       // DB.set('fam_ready',true); // Removido ou substituído
-      document.getElementById('setup').style.display = 'none';
+      const setupEl = document.getElementById('setup');
+      if (setupEl) setupEl.style.display = 'none';
       const ma = document.getElementById('mainApp'); ma.style.display = 'flex'; ma.style.flexDirection = 'column'; ma.style.height = '100%';
       initApp();
     }
@@ -1306,7 +1307,8 @@
     function startApp() {
       if (!members.length) { showToast('Adicione pelo menos 1 membro'); return; }
       // DB.set('fam_ready',true); // Removido ou substituído
-      document.getElementById('setup').style.display = 'none';
+      const setupEl = document.getElementById('setup');
+      if (setupEl) setupEl.style.display = 'none';
       const ma = document.getElementById('mainApp'); ma.style.display = 'flex'; ma.style.flexDirection = 'column'; ma.style.height = '100%';
       initApp();
     }
@@ -1519,7 +1521,6 @@
         icone: addEmoji,
         membro_id: addMemberId || (members[0]?.id || null),
         recorrencia: addRecur,
-        parcelas: addInstallments,
         status: addType === 'income' ? 'paid' : addIsPaid ? 'paid' : 'pending',
         data_vencimento: due || null
       };
@@ -1537,7 +1538,6 @@
         icon: data[0].icone,
         memberId: data[0].membro_id,
         recurrence: data[0].recorrencia,
-        installments: data[0].parcelas,
         dueDate: data[0].data_vencimento
       });
       addRaw = '';
@@ -1747,11 +1747,14 @@
     // ── BOOT ──────────────────────────────────────────────
     window.addEventListener('DOMContentLoaded', async () => {
       await fetchData();
-      document.getElementById('setup').style.display = 'none';
+      const setupEl = document.getElementById('setup');
+      if (setupEl) setupEl.style.display = 'none';
       const ma = document.getElementById('mainApp'); 
-      ma.style.display = 'flex'; 
-      ma.style.flexDirection = 'column'; 
-      ma.style.height = '100%';
+      if (ma) {
+        ma.style.display = 'flex'; 
+        ma.style.flexDirection = 'column'; 
+        ma.style.height = '100%';
+      }
       initApp();
     });
   </script>
