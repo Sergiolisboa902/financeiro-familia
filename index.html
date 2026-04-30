@@ -1377,8 +1377,39 @@
       c.innerHTML = mnav + alerts + `<div class="sec-hdr"><span class="sec-title">${sorted.length} lançamento${sorted.length !== 1 ? 's' : ''}</span></div>` + items;
     }
 
+    function getProjectedTxs() {
+      const projected = [];
+      const firstOfMonth = new Date(currentYear, currentMonth, 1);
+      const lastOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
+      txs.forEach(t => {
+        if (!t.recurrence || t.recurrence === 'once') return;
+        const origin = dObj(t.date);
+        if (origin.getMonth() === currentMonth && origin.getFullYear() === currentYear) return;
+
+        let show = false;
+        if (t.recurrence === 'monthly') {
+          show = new Date(currentYear, currentMonth, 1) > new Date(origin.getFullYear(), origin.getMonth(), 1);
+        } else if (t.recurrence === 'yearly') {
+          show = origin.getMonth() === currentMonth && currentYear > origin.getFullYear();
+        } else if (t.recurrence === 'weekly') {
+          let d = new Date(origin);
+          while (d <= lastOfMonth) { d.setDate(d.getDate() + 7); if (d >= firstOfMonth && d <= lastOfMonth) { show = true; break; } }
+        }
+        if (show) {
+          const day = Math.min(origin.getDate(), lastOfMonth.getDate());
+          const projDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          projected.push({ ...t, id: t.id + '_p_' + currentYear + '_' + currentMonth, date: projDate, isProjected: true, status: 'pending', dueDate: projDate });
+        }
+      });
+      return projected;
+    }
+
     // ── BILLS (Contas) ────────────────────────────────────
     function renderBills(c) {
+      const projected = getProjectedTxs();
+      const incProj = projected.filter(t => t.type === 'income');
+      
       const overdue = txs.filter(t => t.type === 'expense' && isOverdue(t)).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
       const dueToday = txs.filter(t => t.type === 'expense' && isDueToday(t));
       const upcoming = txs.filter(t => t.type === 'expense' && isPendingFuture(t)).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -1387,11 +1418,18 @@
       const mnav = `<div class="month-nav"><button class="month-btn" onclick="changeMonth(-1)">‹</button><span class="month-label">${MONTHS[currentMonth]} ${currentYear}</span><button class="month-btn" onclick="changeMonth(1)">›</button></div>`;
       let html = '';
 
-      if (!overdue.length && !dueToday.length && !upcoming.length) {
-        html = `<div class="empty"><div class="ico">🎉</div><p>Nenhuma conta pendente!<br/>Tudo em dia por aqui.</p></div>`;
+      // Receitas Projetadas
+      if (incProj.length) {
+        html += `<div class="sec-hdr"><span class="sec-title">📈 Receitas Projetadas (${incProj.length})</span></div>`;
+        html += incProj.map(t => txItem(t)).join('');
+      }
+
+      // Despesas
+      if (!overdue.length && !dueToday.length && !upcoming.length && !incProj.length) {
+        html = `<div class="empty"><div class="ico">🎉</div><p>Nenhuma conta ou previsão pendente!</p></div>`;
       }
       if (overdue.length) {
-        html += `<div class="sec-hdr"><span class="sec-title" style="color:var(--expense)">🚨 Vencidas (${overdue.length})</span><span class="sec-action" onclick="switchTab('add')">+ Nova</span></div>`;
+        html += `<div class="sec-hdr" style="margin-top:14px"><span class="sec-title" style="color:var(--expense)">🚨 Vencidas (${overdue.length})</span></div>`;
         html += overdue.map(t => txItem(t)).join('');
       }
       if (dueToday.length) {
@@ -1399,7 +1437,7 @@
         html += dueToday.map(t => txItem(t)).join('');
       }
       if (upcoming.length) {
-        html += `<div class="sec-hdr" style="margin-top:14px"><span class="sec-title">📅 A Vencer (${upcoming.length})</span><span class="sec-action" onclick="switchTab('add')">+ Nova</span></div>`;
+        html += `<div class="sec-hdr" style="margin-top:14px"><span class="sec-title">📅 A Vencer (${upcoming.length})</span></div>`;
         html += upcoming.map(t => txItem(t)).join('');
       }
       if (paid.length) {
